@@ -1,45 +1,74 @@
 <template>
   <div>
-  <el-row :gutter="10">
-    <el-col :span="4">贝塔系数(年)</el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'beta_y', order:'asc', abs:true}}">最小</router-link></el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'beta_y', order:'desc', abs:true}}">最大</router-link></el-col>
-  </el-row>
-  <el-row :gutter="10">
-    <el-col :span="4">贝塔系数(月)</el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'beta_m', order:'asc', abs:true}}">最小</router-link></el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'beta_m', order:'desc', abs:true}}">最大</router-link></el-col>
-  </el-row>
-  <el-row :gutter="10">
-    <el-col :span="4">相关性(年)</el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'corr_y', order:'asc'}}">最小</router-link></el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'corr_y', order:'desc'}}">最大</router-link></el-col>
-  </el-row>
-  <el-row :gutter="10">
-    <el-col :span="4">相关性(月)</el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'corr_m', order:'asc'}}">最小</router-link></el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'corr_m', order:'desc'}}">最大</router-link></el-col>
-  </el-row>
-  <el-row :gutter="10">
-    <el-col :span="4">5日振幅</el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'amplitude_5', order:'asc'}}">最小</router-link></el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'amplitude_5', order:'desc'}}">最大</router-link></el-col>
-  </el-row>
-  <el-row :gutter="10">
-    <el-col :span="4">10日振幅</el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'amplitude_10', order:'asc'}}">最小</router-link></el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'amplitude_10', order:'desc'}}">最大</router-link></el-col>
-  </el-row>
-  <el-row :gutter="10">
-    <el-col :span="4">20日振幅</el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'amplitude_m', order:'asc'}}">最小</router-link></el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'amplitude_m', order:'desc'}}">最大</router-link></el-col>
-  </el-row>
-  <el-row :gutter="10">
-    <el-col :span="4">365日振幅</el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'amplitude_y', order:'asc'}}">最小</router-link></el-col>
-    <el-col :span="4"><router-link :to="{ path: 'stockspec', query: {specname: 'amplitude_y', order:'desc'}}">最大</router-link></el-col>
+  <el-row v-for="name in displayNames" :key="name">
+      <el-col :span="4"><div class="grid-content bg-purple-light">{{specdict[name]}}</div></el-col>
+      <el-col :span="4" @click.native='goTo(name,0,true)'><div class="grid-content bg-purple">最小</div></el-col>
+      <el-col :span="4" @click.native='goTo(name,1,true)'><div class="grid-content bg-purple">最大</div></el-col>
   </el-row>
   </div>
 </template>
 
+<style>
+  .el-row {
+    margin-bottom: 1px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .el-col {
+    margin: 1px;
+    border-radius: 4px;
+  }
+  .bg-purple-dark {
+    background: #99a9bf;
+  }
+  .bg-purple {
+    background: #d3dce6;
+  }
+  .bg-purple-light {
+    background: #e5e9f2;
+  }
+  .grid-content {
+    border-radius: 0px;
+    min-height: 36px;
+    line-height: 36px;
+  }
+  .row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
+  }
+</style>
+
+<script>
+import common from './common.vue'
+
+export default{
+    name:'test',
+
+    data() {
+      return {
+        displayNames: [],
+        specdict : {}
+      }
+    },
+
+    methods:{
+        goTo(name,order_number,abs){
+            let order = 'asc';
+            if(order_number == 1) {
+              order = 'desc'
+            }
+            console.log(name,order,abs)
+            this.$router.push('/stockspec');
+            sessionStorage['specname']=name
+            sessionStorage['order']=order
+            sessionStorage['abs']=abs
+        }
+    },
+
+    created() {
+      this.displayNames = common.listNames,
+      this.specdict = common.spec_dict
+    }
+}
+</script>

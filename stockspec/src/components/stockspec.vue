@@ -61,7 +61,6 @@ import axios from "axios";
 import common from './common.vue'
 import candlechart from "./CandleChart.vue";
 
-const columnNames = ["beta_y", "beta_m", "corr_y", "corr_m", "amplitude_5", "amplitude_10", "amplitude_m","amplitude_y"]
 export default {
 
   name: "StockSpec",
@@ -150,14 +149,19 @@ export default {
     },
 
     getData() {
-      this.specname = this.$route.query.specname;
-      this.order = this.$route.query.order;
-      this.abs = false;
-      if(this.$route.query.abs) {
-        this.abs = this.$route.query.abs
-      }
+      // this.specname = this.$route.params.specname;
+      // this.order = this.$route.params.order;
+      // this.abs = false;
+      // if(this.$route.params.abs) {
+      //   this.abs = this.$route.params.abs
+      // }
+
+      this.specname = sessionStorage['specname']
+      this.order = sessionStorage['order']
+      this.abs = sessionStorage['abs']
 
       this.specdict = common.spec_dict
+      let columnNames = common.listNames
 
       this.titleData = [
         {
