@@ -12,6 +12,7 @@
       :key="key"
       :prop="item.value"
       :label="item.name"
+      sortable
     >
       <template slot-scope="scope">
         <span>{{getDisplayValueScope(scope)}}</span>
@@ -72,8 +73,7 @@ export default {
       selectname:"",
       dayk:[],
       tableHeight: window.innerHeight,
-      shdayk:[],
-      szdayk:[],
+      hs300dayk:[],
       selectreladayk:[],
       candleprops: {},
     };
@@ -85,11 +85,11 @@ export default {
 
   mounted:function(){
         this.$nextTick(function () {
-            this.tableHeight = window.innerHeight - 200;
+            this.tableHeight = window.innerHeight - 100;
             
             let self = this;
             window.onresize = function() {
-                self.tableHeight = window.innerHeight - 200;
+                self.tableHeight = window.innerHeight - 100;
                 console.log("change")
             }
         })　
@@ -123,11 +123,7 @@ export default {
       }
       this.selectcode = row.code
       this.selectname = row.name
-      if(this.selectcode.startsWith('sh')) {
-        this.selectreladayk = this.shdayk
-      } else {
-        this.selectreladayk = this.szdayk
-      }
+      this.selectreladayk = this.hs300dayk
 
       axios
       .get("http://127.0.0.1:8000/stockserver/dayk/", {
@@ -149,30 +145,12 @@ export default {
     },
 
     getData() {
-      // this.specname = this.$route.params.specname;
-      // this.order = this.$route.params.order;
-      // this.abs = false;
-      // if(this.$route.params.abs) {
-      //   this.abs = this.$route.params.abs
-      // }
-
-      this.specname = sessionStorage['specname']
-      this.order = sessionStorage['order']
-      this.abs = sessionStorage['abs']
-
-      console.log(this.specname, this.order, this.abs)
 
       this.specdict = common.spec_dict
-      let columnNames = common.listNames
+      let columnNames = common.hs300_listNames
 
-      this.titleData = [
-        {
-          name: this.specdict[this.specname],
-          value: this.specname
-        }
-      ];
+      this.titleData = [];
 
-      console.log(columnNames)
       for(let index in columnNames) {
         let name = columnNames[index]
         if(name == this.specname) {
@@ -184,14 +162,14 @@ export default {
         })
       };  
 
-      axios
-      .get("http://127.0.0.1:8000/stockserver/spec/", {
-        params: {
-          specname: this.specname,
-          order: this.order,
-          abs: this.abs
-        }
-      })
+      console.log(this.titleData)
+    }
+  },
+
+  created() {
+    this.getData();
+    axios
+      .get("http://127.0.0.1:8000/stockserver/hs300spec/")
       .then(response => {
         this.stockSpecData = response.data.data;
       });
@@ -199,34 +177,12 @@ export default {
     axios
       .get("http://127.0.0.1:8000/stockserver/dayk/", {
         params: {
-          code: 'sh.000001',
+          code: 'sh.000300',
         }
       })
       .then(response => {
-        this.shdayk = response.data.data;
+        this.hs300dayk = response.data.data;
       });
-    
-    axios
-      .get("http://127.0.0.1:8000/stockserver/dayk/", {
-        params: {
-          code: 'sz.399001',
-        }
-      })
-      .then(response => {
-        this.szdayk = response.data.data;
-      });
-
-    }
-  },
-
-  // mounted() {
-  //   console.log("mounted");
-  //   this.getData();
-  // },
-
-  created() {
-    console.log("created");
-    this.getData();
   }
 
   
