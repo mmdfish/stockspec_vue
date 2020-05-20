@@ -61,6 +61,7 @@ export default {
           minRange:30*24 *3600000,
           min: null,
           max: null,
+          startOnTick: false,
         },
         tooltip: {
           split: false,

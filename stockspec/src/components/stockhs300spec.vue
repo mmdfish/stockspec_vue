@@ -1,7 +1,8 @@
 <template>
   <div>
+  <div style="font-size:20px">沪深300个股跑赢沪深300指数排名</div>
   <el-table :data="stockSpecData" :header-cell-style="{background:'#eef1f6',color:'#606266'}" :height="tableHeight" style="width: 100%" @row-click="displayDetails">
-    <el-table-column prop="code" label="代码" fixed></el-table-column>
+    <el-table-column prop="code" label="代码" fixed :show-overflow-tooltip="true"></el-table-column>
     <el-table-column prop="name" label="名字" fixed :show-overflow-tooltip="true">
       <template slot-scope="scope">
         <a :href="getLink(scope.row.code)" target="_blank" class="buttonText"><div style="font-size:16">{{scope.row.name}}</div></a>
@@ -12,6 +13,7 @@
       :key="key"
       :prop="item.value"
       :label="item.name"
+      sortable
     >
       <template slot-scope="scope">
         <span>{{getDisplayValueScope(scope)}}</span>
@@ -72,13 +74,9 @@ export default {
       selectname:"",
       dayk:[],
       tableHeight: window.innerHeight,
-      shdayk:[],
-      szdayk:[],
+      hs300dayk:[],
       selectreladayk:[],
       candleprops: {},
-      specname:"",
-      order:"",
-      abs:"",
     };
   },
 
@@ -88,11 +86,11 @@ export default {
 
   mounted:function(){
         this.$nextTick(function () {
-            this.tableHeight = window.innerHeight -150;
+            this.tableHeight = window.innerHeight - 150;
             
             let self = this;
             window.onresize = function() {
-                self.tableHeight = window.innerHeight -150;
+                self.tableHeight = window.innerHeight - 150;
             }
         })　
     },
@@ -125,11 +123,7 @@ export default {
       }
       this.selectcode = row.code
       this.selectname = row.name
-      if(this.selectcode.startsWith('sh')) {
-        this.selectreladayk = this.shdayk
-      } else {
-        this.selectreladayk = this.szdayk
-      }
+      this.selectreladayk = this.hs300dayk
 
       axios
       .get(common.django_url + "/stockserver/dayk/", {
@@ -151,22 +145,11 @@ export default {
     },
 
     getData() {
-      this.specname = this.$route.query.specname;
-      this.order = this.$route.query.order;
-      this.abs = false;
-      if(this.$route.query.abs) {
-        this.abs = this.$route.query.abs
-      }
 
       this.specdict = common.spec_dict
-      let columnNames = common.listNames
+      let columnNames = common.hs300_listNames
 
-      this.titleData = [
-        {
-          name: this.specdict[this.specname],
-          value: this.specname
-        }
-      ];
+      this.titleData = [];
 
       for(let index in columnNames) {
         let name = columnNames[index]
@@ -178,15 +161,13 @@ export default {
           value: name
         })
       };  
+    }
+  },
 
-      axios
-      .get(common.django_url + "/stockserver/spec/", {
-        params: {
-          specname: this.specname,
-          order: this.order,
-          abs: this.abs
-        }
-      })
+  created() {
+    this.getData();
+    axios
+      .get(common.django_url + "/stockserver/hs300spec/")
       .then(response => {
         this.stockSpecData = response.data.data;
       });
@@ -194,28 +175,12 @@ export default {
     axios
       .get(common.django_url + "/stockserver/dayk/", {
         params: {
-          code: 'sh.000001',
+          code: 'sh.000300',
         }
       })
       .then(response => {
-        this.shdayk = response.data.data;
+        this.hs300dayk = response.data.data;
       });
-    
-    axios
-      .get(common.django_url + "/stockserver/dayk/", {
-        params: {
-          code: 'sz.399001',
-        }
-      })
-      .then(response => {
-        this.szdayk = response.data.data;
-      });
-
-    }
-  },
-
-  created() {
-    this.getData();
   }
 
   

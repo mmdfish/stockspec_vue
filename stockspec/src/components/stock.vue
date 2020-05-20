@@ -1,50 +1,29 @@
 <template>
-  <div>
-  <el-row v-for="name in displayNames" :key="name">
-      <el-col :span="4"><div class="grid-content bg-purple-light">{{specdict[name]}}</div></el-col>
-      <el-col :span="4" @click.native='goTo(name,0,true)'><div class="grid-content bg-purple">最小</div></el-col>
-      <el-col :span="4" @click.native='goTo(name,1,true)'><div class="grid-content bg-purple">最大</div></el-col>
-  </el-row>
-  </div>
+    <el-container style="height:100%; border: 1px solid #eee">
+    <el-aside width="200px" style="background-color: white">
+    <a-menu mode="vertical">
+      <a-sub-menu v-for="name in displayNames" :key="name">
+        <span slot="title"><span>{{specdict[name]}}</span></span>
+        <a-menu-item :key="`${name}-1`" @click="goTo(name,1,true)">
+          最大
+        </a-menu-item>
+        <a-menu-item :key="`${name}-2`" @click="goTo(name,0,true)">
+          最小
+        </a-menu-item>
+      </a-sub-menu>
+    </a-menu>
+    </el-aside>
+    <el-main>
+      <router-view :key="$route.fullPath"></router-view>
+    </el-main>
+   </el-container>
 </template>
-
-<style>
-  .el-row {
-    margin-bottom: 1px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  .el-col {
-    margin: 1px;
-    border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #99a9bf;
-  }
-  .bg-purple {
-    background: #d3dce6;
-  }
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
-  .grid-content {
-    border-radius: 0px;
-    min-height: 36px;
-    line-height: 36px;
-  }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
-  }
-</style>
 
 <script>
 import common from './common.vue'
 
 export default{
     name:'test',
-
     data() {
       return {
         displayNames: [],
@@ -58,17 +37,37 @@ export default{
             if(order_number == 1) {
               order = 'desc'
             }
-            console.log(name,order,abs)
-            this.$router.push('/stockspec');
-            sessionStorage['specname']=name
-            sessionStorage['order']=order
-            sessionStorage['abs']=abs
+            this.$router.push({
+              path: '/stock/stockspec', 
+              query: {
+                specname: name, 
+                order:order, 
+                abs:abs
+            }
+            })
+        },
+    },
+
+    mounted() {
+      this.$router.push({
+        path: '/stock/stockspec', 
+        query: {
+          specname: "beta_y", 
+          order:"desc", 
+          abs:true
         }
+      })
     },
 
     created() {
-      this.displayNames = common.listNames,
-      this.specdict = common.spec_dict
+      this.displayNames = common.listNames;
+      this.specdict = common.spec_dict;
     }
 }
 </script>
+
+<style>
+.el-aside {
+height:88vh;
+}
+</style>
