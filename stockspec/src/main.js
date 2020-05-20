@@ -10,6 +10,10 @@ import HighchartsVue from 'highcharts-vue'
 import Highcharts from 'highcharts'
 import stockInit from 'highcharts/modules/stock'
 
+import Antd from 'ant-design-vue'
+import 'ant-design-vue/dist/antd.css'
+Vue.use(Antd)
+
 stockInit(Highcharts)
 Vue.use(HighchartsVue)
 Highcharts.setOptions({

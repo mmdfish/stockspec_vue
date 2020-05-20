@@ -58,7 +58,6 @@ export default{
             if(order_number == 1) {
               order = 'desc'
             }
-            console.log(name,order,abs)
             this.$router.push('/stockhs300spec');
             sessionStorage['specname']=name
             sessionStorage['order']=order

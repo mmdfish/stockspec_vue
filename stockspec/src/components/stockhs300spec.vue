@@ -1,5 +1,6 @@
 <template>
   <div>
+  <div style="font-size:20px">沪深300个股跑赢沪深300指数排名</div>
   <el-table :data="stockSpecData" :header-cell-style="{background:'#eef1f6',color:'#606266'}" :height="tableHeight" style="width: 100%" @row-click="displayDetails">
     <el-table-column prop="code" label="代码" fixed :show-overflow-tooltip="true"></el-table-column>
     <el-table-column prop="name" label="名字" fixed :show-overflow-tooltip="true">
@@ -85,12 +86,11 @@ export default {
 
   mounted:function(){
         this.$nextTick(function () {
-            this.tableHeight = window.innerHeight - 100;
+            this.tableHeight = window.innerHeight - 150;
             
             let self = this;
             window.onresize = function() {
-                self.tableHeight = window.innerHeight - 100;
-                console.log("change")
+                self.tableHeight = window.innerHeight - 150;
             }
         })　
     },
@@ -126,7 +126,7 @@ export default {
       this.selectreladayk = this.hs300dayk
 
       axios
-      .get("http://127.0.0.1:8000/stockserver/dayk/", {
+      .get(common.django_url + "/stockserver/dayk/", {
         params: {
           code: this.selectcode,
         }
@@ -161,21 +161,19 @@ export default {
           value: name
         })
       };  
-
-      console.log(this.titleData)
     }
   },
 
   created() {
     this.getData();
     axios
-      .get("http://127.0.0.1:8000/stockserver/hs300spec/")
+      .get(common.django_url + "/stockserver/hs300spec/")
       .then(response => {
         this.stockSpecData = response.data.data;
       });
     
     axios
-      .get("http://127.0.0.1:8000/stockserver/dayk/", {
+      .get(common.django_url + "/stockserver/dayk/", {
         params: {
           code: 'sh.000300',
         }

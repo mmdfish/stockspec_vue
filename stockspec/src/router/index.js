@@ -25,11 +25,6 @@ export default new Router({
               path: '/stock/stockspec',
               name: 'StockSpec',
               component: stockspec
-            },
-            {
-              path: '/stock/empty',
-              name: 'Empty',
-              component: empty
             }
           ]
         }
@@ -41,6 +36,11 @@ export default new Router({
         },
       ]
     },
+    {
+      path: '/empty',
+      name: 'Empty',
+      component: empty
+    }
   ]
     
 })

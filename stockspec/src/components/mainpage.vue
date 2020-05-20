@@ -24,16 +24,24 @@
   export default {
     data() {
       return {
-        activeIndex: '1'
+        activeIndex: "/stock/stock"
       };
     },
     methods: {
       handleSelect(key, keyPath) {
-        console.log(key, keyPath);
       },
-        goTo(path) {
-        this.$router.replace(path);
-        }
+      goTo(path) {
+        this.$router.push(path);
+      }
+    },
+    mounted() {
+      this.$router.push("/stock/stock");
     }
   }
 </script>
+
+<style>
+.el-aside {
+height:100vh;
+}
+</style>
