@@ -60,6 +60,8 @@ import Vue from 'vue'
 import axios from "axios";
 import common from './common.vue'
 import candlechart from "./CandleChart.vue";
+import candlechartmacd from "./CandleChart_macd.vue";
+import candlechartbollinger from "./CandleChart_bollinger.vue";
 
 export default {
 
@@ -83,7 +85,9 @@ export default {
   },
 
   components: {
-    candlechart
+    candlechart,
+    candlechartmacd,
+    candlechartbollinger
   },
 
   mounted:function(){

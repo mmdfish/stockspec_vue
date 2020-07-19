@@ -22,6 +22,11 @@ export default {
       checked: false,
 
       stockOptions: {
+        chart: {
+          width: null,
+          height: null,
+          // margin: [10, 10, 10, 10]
+        },
         exporting: {
           enabled: false
         },
@@ -246,6 +251,7 @@ export default {
       dayk:[],
       reladayk:[],
       chart: null,
+      clientHeight: "",
     };
   },
 
@@ -361,7 +367,7 @@ export default {
      this.stockOptions.series[7].data = ohlc2;
 
      if(dataLength < 20) {
-        console.log("length < 20")
+        // console.log("length < 20")
         var latesttime = ohlc[dataLength - 1][0]
         for(i = dataLength; i < 20; i+=1) {
           latesttime += 24 *3600000
@@ -376,16 +382,39 @@ export default {
         this.stockOptions.xAxis.max = ohlc[0][0] + 20*24 *3600000;
         this.stockOptions.xAxis.minRange = 30*24 *3600000;
       } else {
-        console.log("length > 20")
+        // console.log("length > 20")
         this.stockOptions.xAxis.min = null;
         this.stockOptions.xAxis.max = null;
         this.stockOptions.xAxis.minRange = 30*24 *3600000;
       }
+    },
+    changeSize() {
+          if(this.$refs.mystock == undefined) {
+            return
+          }
+          let chart = this.$refs.mystock.chart;
+          if(this.clientHeight < 400) {
+            this.clientHeight = 400
+          }
+          chart.setSize(null, this.clientHeight);
     }
   },
 
+  mounted() {
+    // console.log(window.getComputedStyle(this.$refs.temp).height)
+    this.$nextTick(function () {
+    this.clientHeight = `${document.documentElement.clientHeight}` * 0.7 - 150;
+    this.changeSize();
+    let _this = this;
+    window.addEventListener('resize', function() {
+                _this.clientHeight = `${document.documentElement.clientHeight}` * 0.7 - 150;
+                _this.changeSize()
+            }, false)
+    })
+  },
+
   created() {
-    console.log('creatd')
+    // console.log('creatd')
     this.code = this.props1['code'];
     this.dayk = this.props1['kdata'];
     this.stockname = this.props1['name'];
@@ -398,7 +427,7 @@ export default {
 
 <style scoped>
 .stock {
-  width: 90%;
-  margin: 0 auto;
+  width: 100%; 
+  margin: 20 auto;
 }
 </style>
