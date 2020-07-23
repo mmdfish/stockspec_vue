@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import Highcharts from "highcharts/highstock";
+import Highcharts from 'highcharts';
 import moment from 'moment'
 
 export default {

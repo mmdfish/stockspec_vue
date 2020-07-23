@@ -1,12 +1,9 @@
-import Vue from 'vue'
 import Router from 'vue-router'
 import mainpage from '@/components/mainpage'
 import stock from '@/components/stock'
 import stockspec from '@/components/stockspec'
 import stockhs300spec from '@/components/stockhs300spec'
 import empty from '@/components/empty'
-
-Vue.use(Router)
 
 export default new Router({
   mode: 'history',

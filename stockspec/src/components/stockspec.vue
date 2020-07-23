@@ -19,7 +19,7 @@
     </el-table-column>
   </el-table>
       <el-dialog :title="selectname + '(' + selectcode + ')'" :visible.sync="dialogTableVisible" custom-class="customSize">
-      <div v-if="dialogTableVisible"><candlechart :props1="candleprops"></candlechart></div>
+      <div v-if="dialogTableVisible"><candlechartmacd :props1="candleprops"></candlechartmacd></div>
     </el-dialog>
   </div>
 </template>
