@@ -6,8 +6,8 @@
     const listNames = ["beta_y", "beta_m", "corr_y", "corr_m", "amplitude_5", "amplitude_10", "amplitude_m","amplitude_y","highopen_y","highopen_m"]
     const hs300_listNames = ["trendgap_y", "trendgap_hy", "trendgap_qy", "trendgap_m", "trendgap_10", "trendgap_5"]
 
-    const django_url = "http://127.0.0.1:8000"
-    //const django_url = "http://49.232.69.19:8000"
+    //const django_url = "http://127.0.0.1:8000"
+    const django_url = "http://49.232.69.19:8000"
     
     function getDisplayValueScope(scope) {
       var name = scope.column.property

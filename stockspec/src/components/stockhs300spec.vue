@@ -21,7 +21,7 @@
     </el-table-column>
   </el-table>
       <el-dialog :title="selectname + '(' + selectcode + ')'" :visible.sync="dialogTableVisible" custom-class="customSize">
-      <div v-if="dialogTableVisible"><candlechart :props1="candleprops"></candlechart></div>
+      <div v-if="dialogTableVisible"><candlechartall :props1="candleprops"></candlechartall></div>
     </el-dialog>
   </div>
 </template>
@@ -61,7 +61,7 @@
 import Vue from 'vue'
 import axios from "axios";
 import common from './common.vue'
-import candlechart from "./CandleChart.vue";
+import candlechartall from "./CandleChart_all.vue"
 
 export default {
 
@@ -81,7 +81,7 @@ export default {
   },
 
   components: {
-    candlechart
+    candlechartall
   },
 
   mounted:function(){

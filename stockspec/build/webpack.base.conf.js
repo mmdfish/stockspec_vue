@@ -26,10 +26,10 @@ module.exports = {
     "highcharts":"Highcharts",
     "highcharts-vue":"HighchartsVue",
     // "highcharts/modules/stock":"highcharts/modules/stock",
-    "highcharts/indicators/indicators":"highcharts/indicators/indicators",
-    "highcharts/indicators/ema":"highcharts/indicators/ema",
-    "highcharts/indicators/macd":"highcharts/indicators/macd",
-    "highcharts/indicators/bollinger-bands":"highcharts/indicators/bollinger-bands"
+    // "highcharts/indicators/indicators":"highcharts/indicators/indicators",
+    // "highcharts/indicators/ema":"highcharts/indicators/ema",
+    // "highcharts/indicators/macd":"highcharts/indicators/macd",
+    // "highcharts/indicators/bollinger-bands":"highcharts/indicators/bollinger-bands"
     // 'ant-design-vue': 'Antd'
   },
   output: {

@@ -5,24 +5,6 @@ import router from './router'
 
 import HighchartsVue from 'highcharts-vue'
 import Highcharts from 'highcharts'
-// import stockInit from 'highcharts/modules/stock'
-// import indicators from "highcharts/indicators/indicators";
-// import ema from "highcharts/indicators/ema";
-// import macd from "highcharts/indicators/macd";
-// import bb from "highcharts/indicators/bollinger-bands";
-import Antd from 'ant-design-vue'
-
-Vue.use(VueRouter)
-Vue.use(ELEMENT)
-
-Vue.use(Antd)
-// Vue.use(stockInit)
-
-// stockInit(Highcharts)
-// indicators(Highcharts);
-// ema(Highcharts);
-// macd(Highcharts);
-// bb(Highcharts);
 
 Vue.use(HighchartsVue)
 
