@@ -60,6 +60,14 @@ export default {
                         enabled: false
                     }
                 },
+                line: {
+                  marker: {
+                      enabled: false
+                  }
+                },
+                dataGrouping: {
+                  enabled: false
+                }
             }
         },
         xAxis: {
@@ -79,8 +87,70 @@ export default {
           startOnTick: false,
         },
         tooltip: {
-          split: false,
-          shared: true,
+          // formatter: function() {
+          //      if(this.y == undefined){
+          //          return;
+          //      }
+          //      console.log("ohlc",this.ohlcdata)
+          //      console.log("tipdata",this.tipdata)
+          //      for(var i =0;i<this.tipdata.length;i++){
+          //          if(this.x == this.tipdata[i][0]){
+          //              openper = this.tipdata[i][1]
+          //              highper = this.tipdata[i][2]
+          //              lowper = this.tipdata[i][3]
+          //              closeper = this.tipdata[i][4]
+          //              preclose = this.tipdata[i][5]
+          //          }
+          //      }
+          //      open = this.points[0].point.open
+          //      high = this.points[0].point.high
+          //      low = this.points[0].point.low
+          //      close = this.points[0].point.close
+          //      vol = this.points[1].point.y
+          //      MA5 =this.points[2].y.toFixed(2);
+          //      MA10 =this.points[3].y.toFixed(2);
+          //      MA20 =this.points[4].y.toFixed(2);
+          //      MA30 =this.points[5].y.toFixed(2);
+          //     //  relativeWidth = this.points[0].point.shapeArgs.x;
+          //     var tip= '<b>'+ Highcharts.dateFormat('%Y-%m-%d  %A', this.x) +'</b><br/>';
+          //     if(open>preclose){
+          //         tip += '开盘价：<span style="color: #DD2200;">'+open+ '(' + openper + ') </span><br/>';
+          //     }else{
+          //         tip += '开盘价：<span style="color: #33AA11;">'+open+ '(' + openper + ') </span><br/>';
+          //     } 
+          //     if(high>preclose){
+          //         tip += '最高价：<span style="color: #DD2200;">'+high+ '(' + highper + ') </span><br/>';
+          //     }else{
+          //         tip += '最高价：<span style="color: #33AA11;">'+high+ '(' + highper + ') </span><br/>';
+          //     } 
+          //     if(low>preclose){
+          //         tip += '最低价：<span style="color: #DD2200;">'+low+ '(' + lowper + ') </span><br/>';
+          //     }else{
+          //         tip += '最低价：<span style="color: #33AA11;">'+low+ '(' + lowper + ') </span><br/>';
+          //     }
+          //     if(close>preclose){
+          //         tip += '收盘价：<span style="color: #DD2200;">'+close+ '(' + closeper + ') </span><br/>';
+          //     }else{
+          //         tip += '收盘价：<span style="color: #33AA11;">'+close+ '(' + closeper + ') </span><br/>';
+          //     }
+          //     tip += "成交量："+y+"(万股)<br/>";
+          //     return tip;
+          // },
+          // crosshairs: {
+          //          dashStyle: 'dash'
+          //  },
+          //      borderColor:    'white',
+          //   // positioner: function () { //设置tips显示的相对位置
+          //   //     var halfWidth = this.chart.chartWidth/2;//chart宽度
+          //   //     var width = this.chart.chartWidth-155;
+          //   //     var height = this.chart.chartHeight/5-8;//chart高度
+          //   //     if(relativeWidth<halfWidth){
+          //   //         return { x: width, y:height };
+          //   //     }else{
+          //   //         return { x: 30, y: height };
+          //   //     }
+          //   // },
+          //   shadow: false
         },
         yAxis: [
           {
@@ -221,7 +291,6 @@ export default {
             lineColor: "green",
             upColor: "red",
             upLineColor: "red",
-            tooltip: {},
             navigatorOptions: {
               color: Highcharts.getOptions().colors[0]
             },
@@ -236,7 +305,6 @@ export default {
             name: "成交量(亿)",
             data: [],
             yAxis: 2,
-            dataGrouping: [],
             maxPointWidth: 7,
           },
           {
@@ -245,7 +313,6 @@ export default {
             data: [],
             color: "#000000",
             yAxis: 0,
-            dataGrouping:[],
             lineWidth: 1,
           },{
             type:'line',
@@ -253,7 +320,6 @@ export default {
             data: [],
             color: "#ffc349",
             yAxis: 0,
-            dataGrouping:[],
             lineWidth: 1,
           },{
             type:'line',
@@ -261,7 +327,6 @@ export default {
             data: [],
             color: "#ff8796",
             yAxis: 0,
-            dataGrouping:[],
             lineWidth: 1,
           },{
             type:'line',
@@ -269,7 +334,6 @@ export default {
             data: [],
             color: "#97c068",
             yAxis: 0,
-            dataGrouping:[],
             lineWidth: 1,
           }
           ,{
@@ -278,7 +342,6 @@ export default {
             data: [],
             color: "red",
             yAxis: 1,
-            dataGrouping:[],
             lineWidth: 1,
             visible: false,
           }
@@ -288,20 +351,12 @@ export default {
             data: [],
             color: "white",
             yAxis: 1,
-            dataGrouping:[],
             lineWidth: 0,
             visible: true,
             enableMouseTracking: false
           },
           {
             yAxis: "macd",
-            tooltip: {
-              pointFormat:
-                '<span style="color:{point.color}">\u25CF</span> <b> {series.name}</b><br/>' +
-                "MACD 线：{point.MACD}<br/>" +
-                "信号线：{point.signal}<br/>" +
-                "振荡指标：{point.y}<br/>"
-            },
             type: "macd",
             linkedTo: "maindayk",
             color: "#f05f5f",
@@ -337,6 +392,7 @@ export default {
       dayk:[],
       reladayk:[],
       ohlcdata:[],
+      tipdata:[],
       chart: null,
       clientHeight: "",
       indtype: "",
@@ -363,13 +419,6 @@ export default {
 
         chart.addSeries({
             yAxis: "macd",
-            tooltip: {
-              pointFormat:
-                '<span style="color:{point.color}">\u25CF</span> <b> {series.name}</b><br/>' +
-                "MACD 线：{point.MACD}<br/>" +
-                "信号线：{point.signal}<br/>" +
-                "振荡指标：{point.y}<br/>"
-            },
             type: "macd",
             linkedTo: "maindayk",
             color: "#f05f5f",
@@ -420,12 +469,10 @@ export default {
             lineColor: "green",
             upColor: "red",
             upLineColor: "red",
-            tooltip: {},
             navigatorOptions: {
               color: Highcharts.getOptions().colors[0]
             },
             data: this.ohlcdata,
-            dataGrouping: [],
             yAxis: "macd",
             maxPointWidth: 5,
             id: "bollingdayk"
@@ -444,13 +491,6 @@ export default {
               }
             },
             color: '#006cee', 
-            tooltip: {
-              pointFormat: '<span style="color:{point.color}">\u25CF</span>' +
-              '<b> {series.name}</b><br/>' +
-              '上轨: {point.top}<br/>' +
-              '中轨: {point.middle}<br/>' +
-              '下轨: {point.bottom}<br/>'
-            },
             yAxis: "macd",
             name: '布林（20,2）',
             linkedTo: 'bollingdayk',
@@ -479,45 +519,59 @@ export default {
       let amountv = 0;
       let ohlc = [];
       let ohlc2 = [];
-      let dayday = [];
-      let reladayday = [];
       let volume = [];
       let maset = [5,10,20,30];
 			let ma = [];
       let relastockData = this.reladayk;
       let this0 = stockData[dataLength - 1].close;
       let rela0 = relastockData[dataLength - 1].close;
+
+      let open = 0;
+      let high = 0;
+      let low = 0;
+      let close = 0;
+      let preclose = 0;
+      let openper = 0;
+      let highper = 0;
+      let lowper = 0;
+      let closeper = 0;
+
+      let tipd = [];
+
       for (i = dataLength - 1; i >= 0; i -= 1) {
         timeStamp = moment(stockData[i].date, 'YYYY-MM-DD').valueOf();
         amountv = stockData[i].amount/1E8
         if(amountv != NaN) {
           amountv = Number(amountv.toFixed(3))
         }
+
+        open = stockData[i].open;
+        high = stockData[i].high;
+        low = stockData[i].low;
+        close = stockData[i].close;
+        preclose = stockData[i].preclose;
+        openper = (open - preclose)/preclose * 100;
+        highper = (high - preclose)/preclose * 100;
+        lowper = (low - preclose)/preclose * 100;
+        closeper = (close - preclose)/preclose * 100;
+
         //console.log(stockData[i].date, amountv)
         ohlc.push([
           timeStamp, // the date
-          stockData[i].open, // open
-          stockData[i].high, // high
-          stockData[i].low, // low
-          stockData[i].close // close
+          open,
+          high,
+          low,
+          close
         ]);
         ohlc2.push([
           timeStamp, // the date
-          stockData[i].close // close
+          close // close
         ]);
         volume.push({
-          x: timeStamp,
-          y: amountv, // the date
-          color: stockData[i].open > stockData[i].close ? 'green' : 'red'
+          x: timeStamp,// the date
+          y: amountv, //amount
+          color: open > close ? 'green' : 'red'
         });
-        dayday.push([
-          timeStamp,
-          stockData[i].close
-        ]);
-        reladayday.push([
-          timeStamp,
-          relastockData[i].close
-        ]);
         for (let j = 0; j < maset.length; j++) {
           let value = maset[j];
           if(typeof ma['ma'+value] == "undefined"){
@@ -536,7 +590,19 @@ export default {
             ma['ma'+value].push([timeStamp, kk]);
           }   
         }
+        
+        tipd.push([
+          timeStamp, // the date
+          openper,
+          highper,
+          lowper,
+          closeper,
+          preclose
+        ]);
+
       }
+
+      this.tipdata = tipd;
 
       this.stockOptions.series[0].data = ohlc;
       this.stockOptions.series[1].data = volume;
@@ -563,6 +629,77 @@ export default {
 
      this.stockOptions.series[6].data = ohlc;
      this.stockOptions.series[7].data = ohlc2;
+
+     var relativeWidth = 0;
+     this.stockOptions.tooltip = {
+          formatter: function() {
+               if(this.y == undefined){
+                   return;
+               }
+               for(var i =0;i<tipd.length;i++){
+                   if(this.x == tipd[i][0]){
+                       openper = tipd[i][1].toFixed(2);
+                       highper = tipd[i][2].toFixed(2);
+                       lowper = tipd[i][3].toFixed(2);
+                       closeper = tipd[i][4].toFixed(2);
+                       preclose = tipd[i][5].toFixed(2);
+                   }
+               }
+               open = this.points[0].point.open.toFixed(2);
+               high = this.points[0].point.high.toFixed(2);
+               low = this.points[0].point.low.toFixed(2);
+               close = this.points[0].point.close.toFixed(2);
+               let vol = this.points[1].point.y.toFixed(2);
+               let MA5 = this.points[2].y.toFixed(2);
+               let MA10 = this.points[3].y.toFixed(2);
+               let MA20 = this.points[4].y.toFixed(2);
+               let MA30 = this.points[5].y.toFixed(2);
+               relativeWidth = this.points[0].point.shapeArgs.x;
+              var tip= '<b>'+ Highcharts.dateFormat('%Y-%m-%d  %A', this.x) +'</b><br/>';
+              if(open>preclose){
+                  tip += '开盘价：<span style="color: #DD2200;">'+open+ '(' + openper + '%) </span><br/>';
+              }else{
+                  tip += '开盘价：<span style="color: #33AA11;">'+open+ '(' + openper + '%) </span><br/>';
+              } 
+              if(high>preclose){
+                  tip += '最高价：<span style="color: #DD2200;">'+high+ '(' + highper + '%) </span><br/>';
+              }else{
+                  tip += '最高价：<span style="color: #33AA11;">'+high+ '(' + highper + '%) </span><br/>';
+              } 
+              if(low>preclose){
+                  tip += '最低价：<span style="color: #DD2200;">'+low+ '(' + lowper + '%) </span><br/>';
+              }else{
+                  tip += '最低价：<span style="color: #33AA11;">'+low+ '(' + lowper + '%) </span><br/>';
+              }
+              if(close>preclose){
+                  tip += '收盘价：<span style="color: #DD2200;">'+close+ '(' + closeper + '%) </span><br/>';
+              }else{
+                  tip += '收盘价：<span style="color: #33AA11;">'+close+ '(' + closeper + '%) </span><br/>';
+              }
+              tip += '<span style="color: #000000;">MA5：'+ MA5 + '</span><br/>';
+              tip += '<span style="color: #ffc349;">MA10：'+ MA10 + '</span><br/>';
+              tip += '<span style="color: #ff8796;">MA20：'+ MA20 + '</span><br/>';
+              tip += '<span style="color: #97c068;">MA30：'+ MA30 + '</span><br/>';
+              tip += "成交量："+vol+"(亿)<br/>";
+              return tip;
+          },
+          crosshairs: {
+                   dashStyle: 'dash'
+           },
+               borderColor:    'white',
+            positioner: function () { //设置tips显示的相对位置
+                var halfWidth = this.chart.chartWidth/2;//chart宽度
+                var width = this.chart.chartWidth-180;
+                var height = this.chart.chartHeight/5-8;//chart高度
+                if(relativeWidth<halfWidth){
+                    return { x: width, y:height };
+                }else{
+                    return { x: 40, y: height };
+                }
+            },
+            shadow: false,
+            shared: true
+        }
 
      if(dataLength < 20) {
         // console.log("length < 20")
@@ -591,6 +728,10 @@ export default {
             return
           }
           let chart = this.$refs.mystock.chart;
+          if(chart==undefined) {
+            return
+          }
+          console.log("chart ", chart)
           if(this.clientHeight < 400) {
             this.clientHeight = 400
           }

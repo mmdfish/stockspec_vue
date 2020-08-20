@@ -12,6 +12,7 @@
         active-text-color="#ffd04b">
     <el-menu-item index="/stock/stock" @click="goTo('/stock/stock')">随意参数</el-menu-item>
     <el-menu-item index="/stock/stockhs300spec" @click="goTo('/stock/stockhs300spec')">沪深300</el-menu-item>
+    <el-menu-item index="/stock/indicator" @click="goTo('/stock/indicator')">K线指标</el-menu-item>
     </el-menu>
   </el-header>
   <el-main><router-view></router-view></el-main>
