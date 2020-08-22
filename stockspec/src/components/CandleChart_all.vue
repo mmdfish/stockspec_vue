@@ -87,70 +87,6 @@ export default {
           startOnTick: false,
         },
         tooltip: {
-          // formatter: function() {
-          //      if(this.y == undefined){
-          //          return;
-          //      }
-          //      console.log("ohlc",this.ohlcdata)
-          //      console.log("tipdata",this.tipdata)
-          //      for(var i =0;i<this.tipdata.length;i++){
-          //          if(this.x == this.tipdata[i][0]){
-          //              openper = this.tipdata[i][1]
-          //              highper = this.tipdata[i][2]
-          //              lowper = this.tipdata[i][3]
-          //              closeper = this.tipdata[i][4]
-          //              preclose = this.tipdata[i][5]
-          //          }
-          //      }
-          //      open = this.points[0].point.open
-          //      high = this.points[0].point.high
-          //      low = this.points[0].point.low
-          //      close = this.points[0].point.close
-          //      vol = this.points[1].point.y
-          //      MA5 =this.points[2].y.toFixed(2);
-          //      MA10 =this.points[3].y.toFixed(2);
-          //      MA20 =this.points[4].y.toFixed(2);
-          //      MA30 =this.points[5].y.toFixed(2);
-          //     //  relativeWidth = this.points[0].point.shapeArgs.x;
-          //     var tip= '<b>'+ Highcharts.dateFormat('%Y-%m-%d  %A', this.x) +'</b><br/>';
-          //     if(open>preclose){
-          //         tip += '开盘价：<span style="color: #DD2200;">'+open+ '(' + openper + ') </span><br/>';
-          //     }else{
-          //         tip += '开盘价：<span style="color: #33AA11;">'+open+ '(' + openper + ') </span><br/>';
-          //     } 
-          //     if(high>preclose){
-          //         tip += '最高价：<span style="color: #DD2200;">'+high+ '(' + highper + ') </span><br/>';
-          //     }else{
-          //         tip += '最高价：<span style="color: #33AA11;">'+high+ '(' + highper + ') </span><br/>';
-          //     } 
-          //     if(low>preclose){
-          //         tip += '最低价：<span style="color: #DD2200;">'+low+ '(' + lowper + ') </span><br/>';
-          //     }else{
-          //         tip += '最低价：<span style="color: #33AA11;">'+low+ '(' + lowper + ') </span><br/>';
-          //     }
-          //     if(close>preclose){
-          //         tip += '收盘价：<span style="color: #DD2200;">'+close+ '(' + closeper + ') </span><br/>';
-          //     }else{
-          //         tip += '收盘价：<span style="color: #33AA11;">'+close+ '(' + closeper + ') </span><br/>';
-          //     }
-          //     tip += "成交量："+y+"(万股)<br/>";
-          //     return tip;
-          // },
-          // crosshairs: {
-          //          dashStyle: 'dash'
-          //  },
-          //      borderColor:    'white',
-          //   // positioner: function () { //设置tips显示的相对位置
-          //   //     var halfWidth = this.chart.chartWidth/2;//chart宽度
-          //   //     var width = this.chart.chartWidth-155;
-          //   //     var height = this.chart.chartHeight/5-8;//chart高度
-          //   //     if(relativeWidth<halfWidth){
-          //   //         return { x: width, y:height };
-          //   //     }else{
-          //   //         return { x: 30, y: height };
-          //   //     }
-          //   // },
-          //   shadow: false
         },
         yAxis: [
           {
@@ -262,8 +198,11 @@ export default {
             lineWidth: 2,
             tickPositioner: function () {
               var positions = [],
-                tick = 0,
-                increment = (this.dataMax - this.dataMin) / 3,
+                tick = 0;
+                if (this.dataMax == undefined) {
+                  return positions;
+                } 
+                var increment = (this.dataMax - this.dataMin) / 3,
                 max = this.dataMax,
                 min = this.dataMin;
                 if(increment > 1) {
@@ -554,6 +493,13 @@ export default {
         highper = (high - preclose)/preclose * 100;
         lowper = (low - preclose)/preclose * 100;
         closeper = (close - preclose)/preclose * 100;
+        if (open == close) {
+          if(open > preclose) {
+            close = open + 0.000001;
+          } else {
+            close = open - 0.000001;
+          }
+        }
 
         //console.log(stockData[i].date, amountv)
         ohlc.push([
@@ -645,15 +591,12 @@ export default {
                        preclose = tipd[i][5].toFixed(2);
                    }
                }
+               let length = this.points.length
                open = this.points[0].point.open.toFixed(2);
                high = this.points[0].point.high.toFixed(2);
                low = this.points[0].point.low.toFixed(2);
                close = this.points[0].point.close.toFixed(2);
                let vol = this.points[1].point.y.toFixed(2);
-               let MA5 = this.points[2].y.toFixed(2);
-               let MA10 = this.points[3].y.toFixed(2);
-               let MA20 = this.points[4].y.toFixed(2);
-               let MA30 = this.points[5].y.toFixed(2);
                relativeWidth = this.points[0].point.shapeArgs.x;
               var tip= '<b>'+ Highcharts.dateFormat('%Y-%m-%d  %A', this.x) +'</b><br/>';
               if(open>preclose){
@@ -676,10 +619,22 @@ export default {
               }else{
                   tip += '收盘价：<span style="color: #33AA11;">'+close+ '(' + closeper + '%) </span><br/>';
               }
-              tip += '<span style="color: #000000;">MA5：'+ MA5 + '</span><br/>';
-              tip += '<span style="color: #ffc349;">MA10：'+ MA10 + '</span><br/>';
-              tip += '<span style="color: #ff8796;">MA20：'+ MA20 + '</span><br/>';
-              tip += '<span style="color: #97c068;">MA30：'+ MA30 + '</span><br/>';
+              if(length > 2) {
+                let MA5 = this.points[2].y.toFixed(2);
+                tip += '<span style="color: #000000;">MA5：'+ MA5 + '</span><br/>';
+              }
+              if(length > 3) {
+                let MA10 = this.points[3].y.toFixed(2);
+                tip += '<span style="color: #ffc349;">MA10：'+ MA10 + '</span><br/>';
+              }
+              if(length > 4) {
+                let MA20 = this.points[4].y.toFixed(2);
+                tip += '<span style="color: #ff8796;">MA20：'+ MA20 + '</span><br/>';
+              }
+              if(length > 5) {
+                let MA30 = this.points[5].y.toFixed(2);
+                tip += '<span style="color: #97c068;">MA30：'+ MA30 + '</span><br/>';
+              }
               tip += "成交量："+vol+"(亿)<br/>";
               return tip;
           },
@@ -731,7 +686,7 @@ export default {
           if(chart==undefined) {
             return
           }
-          console.log("chart ", chart)
+          // console.log("chart ", chart)
           if(this.clientHeight < 400) {
             this.clientHeight = 400
           }

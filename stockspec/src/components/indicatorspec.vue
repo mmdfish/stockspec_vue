@@ -144,6 +144,7 @@ export default {
       })
       .then(response => {
         this.dayk = response.data.data;
+        // console.log(this.dayk)
         this.candleprops = {
           'code':this.selectcode,
           'name':this.selectname,
@@ -152,11 +153,10 @@ export default {
         };
         this.dialogTableVisible = true
       });
-      
     },
 
     handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        // console.log(`当前页: ${val}`);
         this.pageIndex = val - 1
         axios.get(common.django_url + "/stockserver/qualification/", {
           params: {
