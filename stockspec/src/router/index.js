@@ -6,6 +6,7 @@ import indicator from '@/components/indicator'
 import indicatorspec from '@/components/indicatorspec'
 import stockhs300spec from '@/components/stockhs300spec'
 import empty from '@/components/empty'
+import information from '@/components/information'
 
 export default new Router({
   mode: 'history',
@@ -51,7 +52,13 @@ export default new Router({
       path: '/empty',
       name: 'Empty',
       component: empty
+    },
+    {
+      path: '/information',
+      name: 'information',
+      component: information
     }
+
   ]
     
 })

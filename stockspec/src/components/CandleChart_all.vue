@@ -1,19 +1,20 @@
 <template>
   <div ref="divvv">
-  <div style="float: left; width:100%">
-    <div style="float: right; width:10%; min-height:1px;"></div>
-    <div style="float: right;"><el-checkbox @change="display" v-model="checked"><div style="color:red">对比大盘</div></el-checkbox></div>
-  </div>
-  <div><highcharts class="stock" :constructor-type="'stockChart'" :options="stockOptions" ref="mystock"></highcharts></div>
-  <div style="float: left">
-    <el-row>
-  <el-button-group>
-  <el-button size="mini" autofocus="true" @click="setToMacd">Macd</el-button>
-  <el-button size="mini" @click="setToBoll"> Boll </el-button>
-</el-button-group>
-</el-row>
+    <div><information :dayinfo="dayInfo"></information></div>
+    <div style="float: left; width:100%">
+      <div style="float: right; width:10%; min-height:1px;"></div>
+      <div style="float: right;"><el-checkbox @change="display" v-model="checked"><div style="color:red">对比大盘</div></el-checkbox></div>
+    </div>
+    <div><highcharts class="stock" :constructor-type="'stockChart'" :options="stockOptions" ref="mystock"></highcharts></div>
+    <div style="float: left">
+      <el-row>
+    <el-button-group>
+    <el-button size="mini" autofocus="true" @click="setToMacd">Macd</el-button>
+    <el-button size="mini" @click="setToBoll"> Boll </el-button>
+  </el-button-group>
+  </el-row>
 
-  </div>
+    </div>
 
   </div>
 </template>
@@ -21,12 +22,16 @@
 <script>
 import Highcharts from 'highcharts';
 import moment from 'moment'
+import information from './information.vue'
 
 export default {
 
-  name: "CandleChart_bollinger",
+  name: "CandleChart_all",
   props:["props1"],
   checked: false,
+  components: {
+    information
+  },
   data() {
     return {
       checked: false,
@@ -48,7 +53,8 @@ export default {
         },
         rangeSelector: {
           selected: 1,
-          inputDateFormat: '%Y-%m-%d'
+          inputDateFormat: '%Y-%m-%d',
+          inputEnabled: false
         },
         title: {
           text: ""
@@ -175,7 +181,7 @@ export default {
               x: -3
             },
             title: {
-              text: "成交量(亿)"
+              text: "成交(万手)"
             },
             top: "50%",
             height: "24%",
@@ -241,7 +247,7 @@ export default {
           },
           {
             type: "column",
-            name: "成交量(亿)",
+            name: "成交(万手)",
             data: [],
             yAxis: 2,
             maxPointWidth: 7,
@@ -335,6 +341,7 @@ export default {
       chart: null,
       clientHeight: "",
       indtype: "",
+      // dayInfo:[],
     };
   },
 
@@ -479,7 +486,7 @@ export default {
 
       for (i = dataLength - 1; i >= 0; i -= 1) {
         timeStamp = moment(stockData[i].date, 'YYYY-MM-DD').valueOf();
-        amountv = stockData[i].amount/1E8
+        amountv = stockData[i].volume/1E6
         if(amountv != NaN) {
           amountv = Number(amountv.toFixed(3))
         }
@@ -547,6 +554,9 @@ export default {
         ]);
 
       }
+
+      this.dayInfo = stockData[0]
+      // console.log(this.dayInfo)
 
       this.tipdata = tipd;
 
@@ -635,7 +645,7 @@ export default {
                 let MA30 = this.points[5].y.toFixed(2);
                 tip += '<span style="color: #97c068;">MA30：'+ MA30 + '</span><br/>';
               }
-              tip += "成交量："+vol+"(亿)<br/>";
+              tip += "成交量："+vol+"(万手)<br/>";
               return tip;
           },
           crosshairs: {
@@ -647,9 +657,9 @@ export default {
                 var width = this.chart.chartWidth-180;
                 var height = this.chart.chartHeight/5-8;//chart高度
                 if(relativeWidth<halfWidth){
-                    return { x: width, y:height };
+                    return { x: width - 40, y:height };
                 }else{
-                    return { x: 40, y: height };
+                    return { x: 0, y: height };
                 }
             },
             shadow: false,
@@ -696,11 +706,11 @@ export default {
 
   mounted() {
     this.$nextTick(function () {
-    this.clientHeight = `${document.documentElement.clientHeight}` * 0.7 - 150;
+    this.clientHeight = `${document.documentElement.clientHeight}` * 0.7 - 160;
     this.changeSize();
     let _this = this;
     window.addEventListener('resize', function() {
-                _this.clientHeight = `${document.documentElement.clientHeight}` * 0.7 - 150;
+                _this.clientHeight = `${document.documentElement.clientHeight}` * 0.7 - 160;
                 _this.changeSize()
             }, false)
     })

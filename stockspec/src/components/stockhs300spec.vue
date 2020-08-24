@@ -29,7 +29,7 @@
 <style>
   .customSize{
     width:70%;
-    height:70%;
+    height:80%;
   }
 
   .el-table th>.cell{
@@ -52,6 +52,7 @@
   }
 
   .el-dialog__body {
+    padding: 0px 10px!important;
     overflow: auto;
   }
 
