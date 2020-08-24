@@ -15,6 +15,23 @@ module.exports = {
   entry: {
     app: './src/main.js'
   },
+  externals:{
+    'vue': 'Vue',
+    'vue-router': 'VueRouter',
+    'axios': 'axios',
+    'element-ui': 'ELEMENT',
+    'ant-design-vue': 'antd',
+    "moment": "moment",
+    // "highcharts":"Highcharts",
+    "highcharts":"Highcharts",
+    "highcharts-vue":"HighchartsVue",
+    // "highcharts/modules/stock":"highcharts/modules/stock",
+    // "highcharts/indicators/indicators":"highcharts/indicators/indicators",
+    // "highcharts/indicators/ema":"highcharts/indicators/ema",
+    // "highcharts/indicators/macd":"highcharts/indicators/macd",
+    // "highcharts/indicators/bollinger-bands":"highcharts/indicators/bollinger-bands"
+    // 'ant-design-vue': 'Antd'
+  },
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',

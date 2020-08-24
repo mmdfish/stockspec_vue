@@ -18,6 +18,13 @@
       </template>
     </el-table-column>
   </el-table>
+  <el-pagination
+  @current-change="handleCurrentChange"
+  :page-size="100"
+  :pager-count="11"
+  layout="prev, pager, next"
+  :total="totalNum">
+</el-pagination>
       <el-dialog :title="selectname + '(' + selectcode + ')'" :visible.sync="dialogTableVisible" custom-class="customSize">
       <div v-if="dialogTableVisible"><candlechartall :props1="candleprops"></candlechartall></div>
     </el-dialog>
@@ -78,8 +85,10 @@ export default {
       selectreladayk:[],
       candleprops: {},
       specname:"",
-      order:"",
-      abs:"",
+      value:1,
+      totalNum:-1,
+      totalPage: 1,
+      pageIndex: 0
     };
   },
 
@@ -89,11 +98,11 @@ export default {
 
   mounted:function(){
         this.$nextTick(function () {
-            this.tableHeight = window.innerHeight -150;
+            this.tableHeight = window.innerHeight -180;
             
             let self = this;
             window.onresize = function() {
-                self.tableHeight = window.innerHeight -150;
+                self.tableHeight = window.innerHeight -180;
             }
         })　
     },
@@ -109,15 +118,11 @@ export default {
     },
 
     getIsDisplayInDialog(key) {
-      let result = key != 'index' && key != 'date' && key != 'name' && key != 'code' && key != 'relacode'
+      let result = key != 'index' && key != 'date' && key != 'name' && key != 'code'
       return result
     },
     getDisplayValueScope(scope) {
-      return common.getDisplayValueScope(scope)
-    },
-
-    getDisplayValue(name, value) {
-      return common.getDisplayValue(name, value)
+      return common.getIndicatorValueScope(scope)
     },
 
     displayDetails(row, column, event) {
@@ -140,6 +145,7 @@ export default {
       })
       .then(response => {
         this.dayk = response.data.data;
+        // console.log(this.dayk)
         this.candleprops = {
           'code':this.selectcode,
           'name':this.selectname,
@@ -148,19 +154,30 @@ export default {
         };
         this.dialogTableVisible = true
       });
-      
+    },
+
+    handleCurrentChange(val) {
+        // console.log(`当前页: ${val}`);
+        this.pageIndex = val - 1
+        axios.get(common.django_url + "/stockserver/qualification/", {
+          params: {
+            specname: this.specname,
+            value: this.value,
+            page: this.pageIndex
+          }
+      })
+      .then(response => {
+        this.stockSpecData = response.data.data;
+      });
     },
 
     getData() {
       this.specname = this.$route.query.specname;
-      this.order = this.$route.query.order;
-      this.abs = false;
-      if(this.$route.query.abs) {
-        this.abs = this.$route.query.abs
-      }
+      this.value = this.$route.query.value;
+      this.pageIndex = 0;
 
-      this.specdict = common.spec_dict
-      let columnNames = common.listNames
+      this.specdict = common.indicator_dictNames
+      let columnNames = common.indicator_columnNames
 
       this.titleData = [
         {
@@ -176,20 +193,22 @@ export default {
         }  
         this.titleData.push({
           name: this.specdict[name],
-          value: name
+          value: name,
         })
       };  
 
       axios
-      .get(common.django_url + "/stockserver/spec/", {
+      .get(common.django_url + "/stockserver/qualification/", {
         params: {
           specname: this.specname,
-          order: this.order,
-          abs: this.abs
+          value: this.value,
+          page: this.pageIndex
         }
       })
       .then(response => {
         this.stockSpecData = response.data.data;
+        this.totalNum = response.data.total;
+        this.totalPage = Math.ceil(this.totalNum/100);
       });
     
     axios
