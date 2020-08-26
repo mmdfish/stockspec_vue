@@ -108,7 +108,7 @@ export default{
             this.price_high = this.dayInfo.high.toFixed(2);
             this.price_low = this.dayInfo.low.toFixed(2);
             this.price_preclose = this.dayInfo.preclose.toFixed(2);
-            this.turnover_rate = this.dayInfo.turn;
+            this.turnover_rate = this.dayInfo.turn.toFixed(2);
             this.price_change = (this.price_close - this.price_preclose).toFixed(2);
             this.price_changeP = (this.price_change/this.price_preclose * 100).toFixed(2);
             this.volume = (this.dayInfo.volume / 100/10000).toFixed(2);
@@ -155,6 +155,7 @@ export default{
 
     created() {
       this.dayInfo = this.dayinfo;
+      console.log(this.dayInfo)
       this.createData();
     }
 }

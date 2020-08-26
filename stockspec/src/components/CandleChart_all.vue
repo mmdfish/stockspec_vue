@@ -652,16 +652,16 @@ export default {
                    dashStyle: 'dash'
            },
                borderColor:    'white',
-            positioner: function () { //设置tips显示的相对位置
-                var halfWidth = this.chart.chartWidth/2;//chart宽度
-                var width = this.chart.chartWidth-180;
-                var height = this.chart.chartHeight/5-8;//chart高度
-                if(relativeWidth<halfWidth){
-                    return { x: width - 40, y:height };
-                }else{
-                    return { x: 0, y: height };
-                }
-            },
+            // positioner: function () { //设置tips显示的相对位置
+            //     var halfWidth = this.chart.chartWidth/2;//chart宽度
+            //     var width = this.chart.chartWidth-180;
+            //     var height = this.chart.chartHeight/5-8;//chart高度
+            //     if(relativeWidth<halfWidth){
+            //         return { x: width - 40, y:height };
+            //     }else{
+            //         return { x: 0, y: height };
+            //     }
+            // },
             shadow: false,
             shared: true
         }
