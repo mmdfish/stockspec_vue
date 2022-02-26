@@ -155,7 +155,7 @@ export default{
 
     created() {
       this.dayInfo = this.dayinfo;
-      console.log(this.dayInfo)
+    //   console.log(this.dayInfo)
       this.createData();
     }
 }
